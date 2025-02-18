@@ -204,7 +204,7 @@ export default function Dashboard() {
                             <ul className="space-y-1">
                                 {analytics.alias.map((alias: string, index: number) => (
                                     <li key={index} className="text-sm">
-                                        <button onClick={() => { getAliasData(alias) }}>{alias}</button>
+                                        <button onClick={() => { window.location.href = `/analytics/${alias}` }}>{alias}</button>
                                     </li>
                                 ))}
                             </ul>

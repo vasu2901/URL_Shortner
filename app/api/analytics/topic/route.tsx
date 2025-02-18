@@ -8,11 +8,18 @@ export async function GET(req: NextRequest) {
         return NextResponse.json({ message: "Invalid User" }, { status: 400 })
     }
     try {
+        const userEmail = session.user?.email || "";
+        const user = await db.user.findUnique({
+            where: { email: userEmail },
+            select: { id: true },
+        });
         const url = new URL(req.url)
         const topic: string = url.searchParams.get('topic') || ""
         const data = await db.url.findMany({
             where: {
-                topic: topic
+                topic: topic,
+                user_id: user?.id
+
             },
             select: {
                 url_id: true,

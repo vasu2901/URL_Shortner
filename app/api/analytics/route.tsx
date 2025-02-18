@@ -8,11 +8,17 @@ export async function GET(req: NextRequest) {
         return NextResponse.json({ message: "Invalid User" }, { status: 400 })
     }
     try {
+        const userEmail = session.user?.email || "";
+        const user = await db.user.findUnique({
+            where: { email: userEmail },
+            select: { id: true },
+        });
         const url = new URL(req.url)
         const alias: string = url.searchParams.get('alias') || ""
         const Url = await db.url.findFirst({
             where: {
-                alias: alias
+                alias: alias,
+                user_id: user?.id
             },
             select: {
                 url_id: true,

@@ -1,5 +1,4 @@
 import { headers } from 'next/headers';
-import { PageProps } from './types';
 export default async function AliasPage({ params }: {
     params: Promise<
         {
