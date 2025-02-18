@@ -1,21 +1,20 @@
+// src/app/layout.tsx
 "use client";
 
-import { SessionProvider } from "next-auth/react";
+import { Providers } from "./providers";
 import { ReactNode } from "react";
 
 export default function RootLayout({
   children,
-  session,
 }: {
   children: ReactNode;
-  session: any;
 }) {
   return (
     <html lang="en">
       <body>
-        <SessionProvider session={session}>
+        <Providers>
           {children}
-        </SessionProvider>
+        </Providers>
       </body>
     </html>
   );
