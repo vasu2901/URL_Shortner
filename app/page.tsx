@@ -1,25 +1,117 @@
 "use client";
-import { Access } from "./client";
-import { Suspense } from "react";
+
+import { Disclosure, DisclosureButton, DisclosurePanel, Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/react'
+import { BellIcon } from '@heroicons/react/24/outline'
+import va from "@vercel/analytics";
+import { signIn } from "next-auth/react";
+const navigation = [
+    { name: 'URL Shortner', href: '/', current: true },
+]
+
+function classNames(...classes: any) {
+    return classes.filter(Boolean).join(' ')
+}
 
 const Page = () => {
     return (
         <div className="font-sans">
-            {/* Navbar */}
-            <nav className="bg-green-600 py-4 px-6 flex justify-between items-center shadow-md">
-                <h1 className="text-white text-2xl font-bold tracking-wide">URL SHORTENER</h1>
-                <Suspense fallback={<div>Loading...</div>}>
-                    <Access />
-                </Suspense>
-            </nav>
+            <Disclosure as="nav" className="bg-gray-800">
+                {({ open }) => (
+                    <>
+                        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+                            <div className="flex h-16 justify-between items-center">
+                                {/* Left Section */}
+                                <div className="flex items-center">
+                                    <div className="mr-4">
+                                        <img
+                                            alt="Logo"
+                                            src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=500"
+                                            className="h-8 w-auto"
+                                        />
+                                    </div>
+                                    <div className="hidden sm:flex space-x-4">
+                                        {navigation.map((item) => (
+                                            <a
+                                                key={item.name}
+                                                href={item.href}
+                                                className={classNames(
+                                                    item.current ? "bg-gray-900 text-white" : "text-gray-300 hover:bg-gray-700 hover:text-white",
+                                                    "px-3 py-2 rounded-md text-sm font-medium"
+                                                )}
+                                            >
+                                                {item.name}
+                                            </a>
+                                        ))}
+                                    </div>
+                                </div>
 
+                                {/* Right Section */}
+                                <div className="flex items-center space-x-4">
+                                    {/* Notification Button */}
+                                    <button className="p-2 text-gray-400 hover:text-white focus:ring-2 focus:ring-white">
+                                        <BellIcon className="h-6 w-6" />
+                                    </button>
+
+                                    {/* Profile Dropdown */}
+                                    <Menu as="div" className="relative w-20 bg-white shadow-lg rounded-md py-1 ring-1 ring-black/5 focus:outline-none ">
+                                        <MenuButton className="flex items-center mx-auto">
+                                            SignIn
+                                        </MenuButton>
+
+                                        <MenuItems className="absolute right-0 mt-2 w-48 bg-white shadow-lg rounded-md py-1 ring-1 ring-black/5 focus:outline-none">
+                                            <MenuItem>
+                                                {({ active }) => (
+                                                    <button
+                                                        onClick={() => {
+                                                            va?.track("login-google");
+                                                            signIn("google", { callbackUrl: "/dashboard" });
+                                                        }}
+                                                        className={classNames(
+                                                            active ? "bg-gray-100" : "",
+                                                            "block w-full px-4 py-2 text-left text-gray-700"
+                                                        )}
+                                                    >
+                                                        SignIn with Google
+                                                    </button>
+                                                )}
+                                            </MenuItem>
+                                        </MenuItems>
+                                    </Menu>
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Mobile Menu */}
+                        <DisclosurePanel className="sm:hidden">
+                            <div className="px-2 pt-2 pb-3 space-y-1">
+                                {navigation.map((item) => (
+                                    <DisclosureButton
+                                        key={item.name}
+                                        as="a"
+                                        href={item.href}
+                                        className={classNames(
+                                            item.current ? "bg-gray-900 text-white" : "text-gray-300 hover:bg-gray-700 hover:text-white",
+                                            "block rounded-md px-3 py-2 text-base font-medium"
+                                        )}
+                                    >
+                                        {item.name}
+                                    </DisclosureButton>
+                                ))}
+                            </div>
+                        </DisclosurePanel>
+                    </>
+                )}
+            </Disclosure>
             {/* Hero Section */}
             <section className="flex flex-col items-center justify-center text-center h-[60vh] bg-green-500 text-white px-6">
                 <h2 className="text-5xl font-extrabold mb-4">Shorten Your Links, Track Your Success!</h2>
                 <p className="text-lg max-w-2xl mx-auto mb-6">
                     Transform long URLs into short, manageable links and gain insights into your audience.
                 </p>
-                <button className="bg-white text-green-600 px-6 py-3 text-lg rounded-lg shadow-md hover:bg-gray-200 transition">
+                <button className="bg-white text-green-600 px-6 py-3 text-lg rounded-lg shadow-md hover:bg-gray-200 transition" onClick={() => {
+                    va?.track("login-google");
+                    signIn("google", { callbackUrl: "/dashboard" });
+                }}>
                     Get Started
                 </button>
             </section>

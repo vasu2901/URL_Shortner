@@ -2,21 +2,39 @@
 import React, { useState } from 'react';
 import { signOut, useSession } from "next-auth/react";
 import { Disclosure, DisclosureButton, DisclosurePanel, Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/react'
-import { Bars3Icon, BellIcon, XMarkIcon } from '@heroicons/react/24/outline'
+import { BellIcon } from '@heroicons/react/24/outline'
 
 const navigation = [
     { name: 'Dashboard', href: '/dashboard', current: false },
-    { name: 'Topic', href: '/topic', current: true },
-    { name: 'Projects', href: '#', current: false },
-    { name: 'Calendar', href: '#', current: false },
+    { name: 'Topic', href: '/topic', current: true }
 ]
 
 function classNames(...classes: any) {
     return classes.filter(Boolean).join(' ')
 }
 
+interface ClickData {
+    date: string;
+    count: number;
+}
+
+interface Analytics {
+    id: string;
+    url_id: string;
+    totalClicks: number;
+    uniqueUsers: number;
+    clicksByDate: ClickData[];
+}
+
+interface URLAnalytics {
+    url_id: string;
+    alias: string;
+    analytics: Analytics;
+}
+
 export default function TopicForm() {
     const { data: session, status } = useSession();
+    const [analytics, setAnalytics] = useState<URLAnalytics[]>([]);
     if (status === "unauthenticated") {
         return (window.location.href = '/');
     }
@@ -38,6 +56,7 @@ export default function TopicForm() {
             console.log(json);
         }
         console.log(json)
+        setAnalytics(json)
         console.log("Successfully received data")
     };
 
@@ -58,6 +77,15 @@ export default function TopicForm() {
                                         />
                                     </div>
                                     <div className="hidden sm:flex space-x-4">
+                                        <a
+                                            key='home'
+                                            href='/'
+                                            className={classNames("text-gray-300 hover:bg-gray-700 hover:text-white",
+                                                "px-3 py-2 rounded-md text-sm font-medium"
+                                            )}
+                                        >
+                                            URL Shortner
+                                        </a>
                                         {navigation.map((item) => (
                                             <a
                                                 key={item.name}
@@ -113,6 +141,16 @@ export default function TopicForm() {
                         {/* Mobile Menu */}
                         <DisclosurePanel className="sm:hidden">
                             <div className="px-2 pt-2 pb-3 space-y-1">
+                                <DisclosureButton
+                                    key='home'
+                                    as="a"
+                                    href="/"
+                                    className={classNames("text-gray-300 hover:bg-gray-700 hover:text-white",
+                                        "block rounded-md px-3 py-2 text-base font-medium"
+                                    )}
+                                >
+                                    Home
+                                </DisclosureButton>
                                 {navigation.map((item) => (
                                     <DisclosureButton
                                         key={item.name}
@@ -157,6 +195,35 @@ export default function TopicForm() {
                         Submit
                     </button>
                 </form>
+                {analytics.length > 0 && analytics.map((data, index) => (
+                    <div key={index} className="p-4 mt-6 border rounded shadow">
+                        <h2 className="text-xl font-bold mb-4">Analytics Overview for URL ID: {data.alias}</h2>
+
+                        <p className="text-lg"><strong>Total Clicks:</strong> {data.analytics.totalClicks}</p>
+                        <p className="text-lg"><strong>Unique Users:</strong> {data.analytics.uniqueUsers}</p>
+
+                        {/* Clicks by Date */}
+                        <div className="mt-4">
+                            <h3 className="text-lg font-semibold">Clicks by Date</h3>
+                            <table className="w-full border">
+                                <thead>
+                                    <tr className="bg-gray-100">
+                                        <th className="border p-2">Date</th>
+                                        <th className="border p-2">Clicks</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {data.analytics.clicksByDate.map((entry, idx) => (
+                                        <tr key={idx}>
+                                            <td className="border p-2">{entry.date}</td>
+                                            <td className="border p-2">{entry.count}</td>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                ))}
             </div>
         </div>
     );

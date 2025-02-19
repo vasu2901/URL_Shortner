@@ -23,6 +23,7 @@ export async function GET(req: NextRequest) {
             },
             select: {
                 url_id: true,
+                alias: true,
                 analytics: true
             }
         })

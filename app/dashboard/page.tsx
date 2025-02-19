@@ -6,10 +6,8 @@ import { Disclosure, DisclosureButton, DisclosurePanel, Menu, MenuButton, MenuIt
 import { Bars3Icon, BellIcon, XMarkIcon } from '@heroicons/react/24/outline'
 
 const navigation = [
-    { name: 'Dashboard', href: '#', current: true },
+    { name: 'Dashboard', href: '/dashboard', current: true },
     { name: 'Topic', href: '/topic', current: false },
-    { name: 'Projects', href: '#', current: false },
-    { name: 'Calendar', href: '#', current: false },
 ]
 
 function classNames(...classes: any) {
@@ -103,6 +101,15 @@ export default function Dashboard() {
                                         />
                                     </div>
                                     <div className="hidden sm:flex space-x-4">
+                                        <a
+                                            key='home'
+                                            href='/'
+                                            className={classNames("text-gray-300 hover:bg-gray-700 hover:text-white",
+                                                "px-3 py-2 rounded-md text-sm font-medium"
+                                            )}
+                                        >
+                                            URL Shortner
+                                        </a>
                                         {navigation.map((item) => (
                                             <a
                                                 key={item.name}
@@ -158,6 +165,16 @@ export default function Dashboard() {
                         {/* Mobile Menu */}
                         <DisclosurePanel className="sm:hidden">
                             <div className="px-2 pt-2 pb-3 space-y-1">
+                                <DisclosureButton
+                                    key='home'
+                                    as="a"
+                                    href="/"
+                                    className={classNames("text-gray-300 hover:bg-gray-700 hover:text-white",
+                                        "block rounded-md px-3 py-2 text-base font-medium"
+                                    )}
+                                >
+                                    Home
+                                </DisclosureButton>
                                 {navigation.map((item) => (
                                     <DisclosureButton
                                         key={item.name}
