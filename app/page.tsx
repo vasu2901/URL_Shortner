@@ -1,15 +1,11 @@
+import { Access } from "./client";
+import { Suspense } from "react";
+const Page = () => {
+    return (
+        <Suspense fallback={<div>Loading...</div>}>
+            <Access />
+        </Suspense>
+    );
+};
 
-
-export default function GoogleAuthComponent() {
-
-
-  return (
-    <button
-
-      className="px-4 py-2 bg-blue-500 text-white rounded"
-    >
-      <a href='/access'>
-        Sign in with Google</a>
-    </button>
-  );
-}
+export default Page;
