@@ -1,42 +1,89 @@
+@import "tailwindcss";
+
+/* globals.css */
+
+/* 🌙 Light & Dark Mode Variables */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background-light: #f8f9fa;
+  --foreground-light: #171717;
+  --background-dark: #121212;
+  --foreground-dark: #ffffff;
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    --background: var(--background-dark);
+    --foreground: var(--foreground-dark);
   }
 }
 
-html,
 body {
-  max-width: 100vw;
-  overflow-x: hidden;
+  color: var(--foreground-light);
+  background-color: var(--background-light);
+  font-family: "Inter", sans-serif;
 }
 
-body {
-  color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+/* Navbar Styling */
+.navbar {
+  background-color: #1f2937;
+  padding: 1rem;
 }
 
-* {
-  box-sizing: border-box;
-  padding: 0;
-  margin: 0;
+.navbar-logo {
+  height: 40px;
+  margin-right: 1rem;
 }
 
-a {
-  color: inherit;
-  text-decoration: none;
+.navbar-links {
+  display: flex;
+  gap: 1rem;
+  color: white;
 }
 
-@media (prefers-color-scheme: dark) {
-  html {
-    color-scheme: dark;
-  }
+/* Form Styling */
+.form-container {
+  max-width: 600px;
+  margin: auto;
+  padding: 2rem;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.input-field {
+  width: 100%;
+  padding: 10px;
+  margin-top: 5px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+/* Buttons */
+.primary-button {
+  background-color: #007bff;
+  color: white;
+  padding: 10px 15px;
+  border-radius: 5px;
+  font-size: 16px;
+  transition: 0.3s;
+}
+
+.primary-button:hover {
+  background-color: #0056b3;
+}
+
+.secondary-button {
+  background-color: #dc3545;
+  color: white;
+}
+
+.secondary-button:hover {
+  background-color: #c82333;
+}
+
+/* Analytics Section */
+.analytics-section {
+  background: #f8f9fa;
+  padding: 2rem;
+  border-radius: 8px;
 }
