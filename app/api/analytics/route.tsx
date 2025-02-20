@@ -28,6 +28,9 @@ export async function GET(req: NextRequest) {
         if (!Url) {
             throw new Error("Invalid Alias.")
         }
+        if (!Url.analytics) {
+            return NextResponse.json({ message: "No Data Found" }, { status: 200 })
+        }
         return NextResponse.json(Url.analytics, { status: 200 })
     } catch (err) {
         return NextResponse.json(err, { status: 500 })

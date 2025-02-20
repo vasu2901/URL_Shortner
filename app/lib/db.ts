@@ -9,7 +9,7 @@ if (process.env.NODE_ENV === "production") {
     prisma = new PrismaClient();
 } else {
     if (!globalThis.cachedPrisma) {
-        console.log("creating new prisma client", process.env.NODE_ENV);
+        //console.log("creating new prisma client", process.env.NODE_ENV);
         globalThis.cachedPrisma = new PrismaClient({
         });
 

@@ -7,7 +7,7 @@ export default async function AliasPage({ params }: {
 }) {
     const { aliasid } = await params;
     const requestHeaders = headers() as unknown as Headers;
-    console.log(requestHeaders)
+    //console.log(requestHeaders)
     const ip = requestHeaders.get('x-forwarded-for')?.split(',')[0].trim() ||
         requestHeaders.get('x-real-ip') ||
         'unknown';

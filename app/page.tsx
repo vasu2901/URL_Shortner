@@ -4,6 +4,10 @@ import { Disclosure, DisclosureButton, DisclosurePanel, Menu, MenuButton, MenuIt
 import { BellIcon } from '@heroicons/react/24/outline'
 import va from "@vercel/analytics";
 import { signIn } from "next-auth/react";
+import pic from "../TopicAnalytics.jpg"
+import pic2 from "../customaliasanalytics.jpg"
+import pic3 from "../overallanalytics.jpg"
+import Image from 'next/image';
 const navigation = [
     { name: 'URL Shortner', href: '/', current: true },
 ]
@@ -25,7 +29,7 @@ const Page = () => {
                                     <div className="mr-4">
                                         <img
                                             alt="Logo"
-                                            src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=500"
+                                            src="https://img.icons8.com/?size=512&id=stdEXlVErsEe&format=png"
                                             className="h-8 w-auto"
                                         />
                                     </div>
@@ -129,9 +133,17 @@ const Page = () => {
             <section className="py-20 text-center bg-white">
                 <h2 className="text-4xl font-bold text-gray-800">Analytics</h2>
                 <ul className="mt-6 space-y-4 text-gray-700 text-lg">
-                    <li>📊 Alias-Based Analytics</li>
-                    <li>📌 Topic-Based Analytics</li>
-                    <li>📈 Overall User Analytics</li>
+                    <ul className="mt-6 space-y-4 text-gray-700 text-lg">
+                        <li>📊 Alias-Based Analytics</li>
+                        <Image src={pic2} alt="Alias-Based Analytics" width={500} height={300} className="mx-auto rounded-lg shadow-md" />
+
+                        <li>📌 Topic-Based Analytics</li>
+                        <Image src={pic} alt="Topic-Based Analytics" width={500} height={300} className="mx-auto rounded-lg shadow-md" />
+
+                        <li>📈 Overall User Analytics</li>
+                        <Image src={pic3} alt="Overall User Analytics" width={500} height={300} className="mx-auto rounded-lg shadow-md" />
+                    </ul>
+
                 </ul>
             </section>
 

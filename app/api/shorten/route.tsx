@@ -19,7 +19,6 @@ export async function GET(req: NextRequest) {
         return NextResponse.json({ error: "No alias found" }, { status: 404 })
     }
     try {
-        console.log(req.headers)
         const ip = req.headers.get('x-forwarded-for') || 'unknown';
         const userAgent = req.headers.get('user-agent') || '';
         const { osName, deviceName } = parseUserAgent(userAgent);
@@ -79,42 +78,53 @@ export async function GET(req: NextRequest) {
         });
         return NextResponse.json({ message: url?.long_url }, { status: 200 })
     } catch (error) {
-        console.log(error)
+        //console.log(error)
         return NextResponse.json({ message: "Api not Working" }, { status: 400 })
     }
 }
 
 export async function POST(req: NextRequest) {
-    const session = await getServerSession(authOptions)
+    const session = await getServerSession(authOptions);
     if (!session) {
-        return NextResponse.json({ message: "Invalid User" }, { status: 400 })
+        return NextResponse.json({ message: "Invalid User" }, { status: 400 });
     }
+
     try {
         let { longUrl, customAlias, topic } = await req.json();
-        if (!customAlias) {
-            customAlias = generateRandomAlias()
+
+        // Check if the longUrl already exists in the database
+        const existingUrl = await db.url.findUnique({
+            where: { long_url: longUrl },
+        });
+
+        if (existingUrl) {
+            return NextResponse.json({ message: "The URL already exists" }, { status: 400 });
         }
+
         const user = await db.user.findUnique({
-            where: {
-                email: session.user?.email as string
-            },
-            select: {
-                id: true
-            }
-        })
+            where: { email: session.user?.email as string },
+            select: { id: true },
+        });
+        let aliasExists = await db.url.findUnique({
+            where: { alias: customAlias },
+        });
+        if (!customAlias || aliasExists) {
+            customAlias = generateRandomAlias();
+        }
+
+        // Save to database
         await db.url.create({
             data: {
-                long_url: longUrl as string,
-                alias: customAlias as string,
-                topic: topic as string,
+                long_url: longUrl,
+                alias: customAlias,
+                topic: topic,
                 user_id: user?.id as string,
-            }
-        })
-        return NextResponse.json({ message: `${process.env.NEXTAUTH_URL}${customAlias}` }, { status: 200 })
-    } catch (error) {
-        console.log(error)
-        return NextResponse.json({ message: "Api not Working" }, { status: 400 })
+            },
+        });
+
+        return NextResponse.json({ message: `${process.env.NEXTAUTH_URL}alias/${customAlias}`, alias: customAlias }, { status: 200 });
+
+    } catch (error: any) {
+        return NextResponse.json({ message: "API not working", error: error.message }, { status: 500 });
     }
-
-
 }

@@ -53,11 +53,11 @@ export default function TopicForm() {
         const res = await fetch(url, { method: "GET" })
         const json = await res.json();
         if (!res.ok) {
-            console.log(json);
+            //console.log(json);
         }
-        console.log(json)
+        //console.log(json)
         setAnalytics(json)
-        console.log("Successfully received data")
+        //console.log("Successfully received data")
     };
 
     return (
@@ -72,7 +72,7 @@ export default function TopicForm() {
                                     <div className="mr-4">
                                         <img
                                             alt="Logo"
-                                            src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=500"
+                                            src="https://img.icons8.com/?size=512&id=stdEXlVErsEe&format=png"
                                             className="h-8 w-auto"
                                         />
                                     </div>
@@ -199,29 +199,37 @@ export default function TopicForm() {
                     <div key={index} className="p-4 mt-6 border rounded shadow">
                         <h2 className="text-xl font-bold mb-4">Analytics Overview for URL ID: {data.alias}</h2>
 
-                        <p className="text-lg"><strong>Total Clicks:</strong> {data.analytics.totalClicks}</p>
-                        <p className="text-lg"><strong>Unique Users:</strong> {data.analytics.uniqueUsers}</p>
+                        {data.analytics ? (<><p className="text-lg"><strong>Total Clicks:</strong> {data.analytics.totalClicks}</p>
+                            <p className="text-lg"><strong>Unique Users:</strong> {data.analytics.uniqueUsers}</p>
 
-                        {/* Clicks by Date */}
-                        <div className="mt-4">
-                            <h3 className="text-lg font-semibold">Clicks by Date</h3>
-                            <table className="w-full border">
-                                <thead>
-                                    <tr className="bg-gray-100">
-                                        <th className="border p-2">Date</th>
-                                        <th className="border p-2">Clicks</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {data.analytics.clicksByDate.map((entry, idx) => (
-                                        <tr key={idx}>
-                                            <td className="border p-2">{entry.date}</td>
-                                            <td className="border p-2">{entry.count}</td>
+                            {/* Clicks by Date */}
+                            <div className="mt-4">
+                                <h3 className="text-lg font-semibold">Clicks by Date</h3>
+                                <table className="w-full border">
+                                    <thead>
+                                        <tr className="bg-gray-100">
+                                            <th className="border p-2">Date</th>
+                                            <th className="border p-2">Clicks</th>
                                         </tr>
-                                    ))}
-                                </tbody>
-                            </table>
-                        </div>
+                                    </thead>
+                                    <tbody>
+                                        {data.analytics.clicksByDate.map((entry, idx) => (
+                                            <tr key={idx}>
+                                                <td className="border p-2">{entry.date}</td>
+                                                <td className="border p-2">{entry.count}</td>
+                                            </tr>
+                                        ))}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </>) : (<><p className="text-lg"><strong>Total Clicks:</strong> 0</p>
+                            <p className="text-lg"><strong>Unique Users:</strong> 0</p>
+
+                            {/* Clicks by Date */}
+                            <div className="mt-4">
+                                <h3 className="text-lg font-semibold">Clicks by Date</h3>
+                                <p> No Data Found</p>
+                            </div></>)}
                     </div>
                 ))}
             </div>

@@ -2,6 +2,7 @@ import { db } from "@/app/lib/db";
 import { NextRequest, NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import { authOptions } from "../../../lib/auth";
+import { redis } from "@/app/lib/redis";
 
 export async function GET(req: NextRequest) {
     const session = await getServerSession(authOptions);
@@ -13,14 +14,18 @@ export async function GET(req: NextRequest) {
     try {
         const userEmail = session.user?.email || "";
 
-        // Check Redis cache
-        // const cacheKey = `overall_analytics:${userEmail}`;
-        // const cachedData = await redis.get(cacheKey);
+        const cacheKey = `overall_analytics:${userEmail}`;
+        const cachedData: any = await redis.get(cacheKey);
 
-        // if (cachedData) {
-        //     console.log("Cache Hit");
-        //     return NextResponse.json(JSON.parse(cachedData), { status: 200 });
-        // }
+        if (cachedData) {
+            try {
+
+                const data = typeof cachedData === "string" ? JSON.parse(cachedData) : cachedData;
+                return NextResponse.json(data, { status: 200 });
+            } catch (error) {
+                console.error("Error parsing cached data:", error);
+            }
+        }
 
         const user = await db.user.findUnique({
             where: { email: userEmail },
@@ -52,7 +57,11 @@ export async function GET(req: NextRequest) {
 
         urls.forEach(url => {
 
-            if (!url.analytics) return;
+            if (!url.analytics) {
+                aliasurls.push(url.alias)
+
+                return;
+            }
 
             aliasurls.push(url.alias)
 
@@ -61,7 +70,7 @@ export async function GET(req: NextRequest) {
             url.analytics.IPS?.forEach(ip => uniqueUsers.add(ip));
 
             url.analytics.clicksByDate.forEach((entry: any) => {
-                console.log(entry)
+                //console.log(entry)
                 if (!_clicksByDate[entry?.date]) {
                     _clicksByDate[entry?.date] = 0;
                 }
@@ -85,7 +94,7 @@ export async function GET(req: NextRequest) {
                 deviceTypeStats[deviceEntry.deviceName].uniqueUsers += deviceEntry.uniqueUsers;
             });
         });
-        console.log(_clicksByDate)
+        //console.log(_clicksByDate)
         const analyticsResponse = {
             totalUrls: urls.length,
             totalClicks,
@@ -105,7 +114,7 @@ export async function GET(req: NextRequest) {
             alias: aliasurls
         };
 
-        // await redis.setex(cacheKey, 300, JSON.stringify(analyticsResponse));
+        await redis.setex(cacheKey, 86400, JSON.stringify(analyticsResponse)); //only for 24 hours.
 
         return NextResponse.json(analyticsResponse, { status: 200 });
 

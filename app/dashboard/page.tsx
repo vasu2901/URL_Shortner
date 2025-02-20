@@ -35,7 +35,7 @@ export default function Dashboard() {
             const res = await fetch('/api/analytics/overall', { method: 'GET' });
             const json = await res.json();
             if (!res.ok || json.message) {
-                console.log(json);
+                //console.log(json);
             }
             else {
                 setAnalytics(json);
@@ -49,7 +49,7 @@ export default function Dashboard() {
         try {
             const res = await fetch(`/api/analytics?alias=${alias}`, { method: 'GET' });
             const json = await res.json();
-            console.log(json);
+            //console.log(json);
             // setAnalytics(json);
         } catch (err) {
             console.error("Failed to fetch analytics:", err);
@@ -96,7 +96,7 @@ export default function Dashboard() {
                                     <div className="mr-4">
                                         <img
                                             alt="Logo"
-                                            src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=500"
+                                            src="https://img.icons8.com/?size=512&id=stdEXlVErsEe&format=png"
                                             className="h-8 w-auto"
                                         />
                                     </div>
