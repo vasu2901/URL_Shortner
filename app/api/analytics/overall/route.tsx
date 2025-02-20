@@ -56,10 +56,9 @@ export async function GET(req: NextRequest) {
         let aliasurls: string[] = []
 
         urls.forEach(url => {
-
+            console.log(url)
             if (!url.analytics) {
                 aliasurls.push(url.alias)
-
                 return;
             }
 
@@ -114,7 +113,7 @@ export async function GET(req: NextRequest) {
             alias: aliasurls
         };
 
-        await redis.setex(cacheKey, 86400, JSON.stringify(analyticsResponse)); //only for 24 hours.
+        await redis.setex(cacheKey, 300, JSON.stringify(analyticsResponse)); //only for 24 hours.
 
         return NextResponse.json(analyticsResponse, { status: 200 });
 
